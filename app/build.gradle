@@ -39,6 +39,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     // ViewModel and LiveData https://developer.android.com/jetpack/androidx/releases/lifecycle
     def lifecycleVersion = '2.2.0'
