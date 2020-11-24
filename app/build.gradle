@@ -33,13 +33,33 @@ android {
 }
 
 dependencies {
-
+  // Base
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'androidx.core:core-ktx:1.2.0'
-  implementation 'androidx.appcompat:appcompat:1.1.0'
-  implementation 'com.google.android.material:material:1.1.0'
-  implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-  testImplementation 'junit:junit:4.+'
-  androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-  androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+  implementation 'androidx.core:core-ktx:1.3.2'
+  implementation 'androidx.appcompat:appcompat:1.2.0'
+  implementation 'com.google.android.material:material:1.2.1'
+  implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+  // ViewModel and LiveData https://developer.android.com/jetpack/androidx/releases/lifecycle
+  def lifecycleVersion = '2.2.0'
+  implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+  implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+
+  // Koin https://github.com/InsertKoinIO/koin
+  def koinVersion = '2.1.6'
+  implementation "org.koin:koin-android:$koinVersion"
+  implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
+
+  // Coroutines https://github.com/Kotlin/kotlinx.coroutines
+  def coroutinesVersion = '1.4.0'
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+  
+  // Timber Kt https://github.com/ajalt/timberkt
+  implementation 'com.github.ajalt:timberkt:1.5.1'
+
+  // Test
+  testImplementation 'junit:junit:4.13.1'
+  androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
