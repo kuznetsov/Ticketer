@@ -60,6 +60,9 @@ dependencies {
     // Timber Kt https://github.com/ajalt/timberkt
     implementation 'com.github.ajalt:timberkt:1.5.1'
 
+    // Material Components
+    implementation 'com.google.android.material:material:1.2.1'
+
     // Test
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
