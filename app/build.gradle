@@ -48,6 +48,7 @@ dependencies {
     // Koin https://github.com/InsertKoinIO/koin
     def koinVersion = '2.1.6'
     implementation "org.koin:koin-android:$koinVersion"
+    implementation "org.koin:koin-androidx-fragment:$koinVersion"
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
 
     // Coroutines https://github.com/Kotlin/kotlinx.coroutines
