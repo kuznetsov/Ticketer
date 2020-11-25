@@ -60,7 +60,7 @@ dependencies {
     // Timber Kt https://github.com/ajalt/timberkt
     implementation 'com.github.ajalt:timberkt:1.5.1'
 
-    // Material Components
+    // Material Components https://github.com/material-components/material-components-android
     implementation 'com.google.android.material:material:1.2.1'
 
     // Test
