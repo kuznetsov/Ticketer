@@ -6,9 +6,12 @@ import org.koin.androidx.fragment.dsl.fragment
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val appModule = module {
-    // ViewModels
-    viewModel { SearchViewModel() }
-    // Fragments
+val fragmentsModule = module {
     fragment { SearchFragment(get()) }
 }
+
+val viewModelsModule = module {
+    viewModel { SearchViewModel() }
+}
+
+val appModules = listOf(fragmentsModule, viewModelsModule)
