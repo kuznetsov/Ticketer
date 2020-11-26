@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ClickableWidgetStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/base_screen_margin"
+    android:paddingEnd="@dimen/base_screen_margin">
+
+    <TextView
+        android:id="@+id/textViewSuggestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="60dp"
+        android:textColor="@color/gray_900_80"
+        android:textSize="@dimen/text_body2" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_divider_height"
+        android:background="@color/gray_100" />
+
+</LinearLayout>

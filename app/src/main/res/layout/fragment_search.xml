@@ -30,6 +30,7 @@
         app:layout_constraintVertical_chainStyle="packed">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextFrom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white" />
@@ -55,6 +56,7 @@
         app:layout_constraintTop_toBottomOf="@id/inputLayoutFrom">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextTo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white" />
@@ -69,9 +71,9 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         app:backgroundTint="@color/purple_700"
-        app:cornerRadius="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:shapeAppearanceOverlay="@style/PillShapeAppearance" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

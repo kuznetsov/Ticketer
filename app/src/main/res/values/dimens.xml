@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Text Sizes -->
+    <dimen name="text_body2">14sp</dimen>
+
+    <!-- Base -->
+    <dimen name="base_screen_margin">20dp</dimen>
+    <dimen name="base_divider_height">1dp</dimen>
+</resources>
