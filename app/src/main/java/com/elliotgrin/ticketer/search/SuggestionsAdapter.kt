@@ -7,7 +7,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import com.elliotgrin.ticketer.R
 import com.elliotgrin.ticketer.model.CityUiModel
-import com.elliotgrin.ticketer.util.inflate
+import com.elliotgrin.ticketer.util.ext.inflate
 import com.github.ajalt.timberkt.d
 import kotlinx.android.synthetic.main.item_autocomplete_suggestion.view.*
 

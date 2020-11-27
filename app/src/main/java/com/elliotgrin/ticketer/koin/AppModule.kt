@@ -1,5 +1,6 @@
 package com.elliotgrin.ticketer.koin
 
+import com.elliotgrin.ticketer.main.MainViewModel
 import com.elliotgrin.ticketer.search.AutocompleteRepository
 import com.elliotgrin.ticketer.search.SearchFragment
 import com.elliotgrin.ticketer.search.SearchViewModel
@@ -12,6 +13,7 @@ val fragmentsModule = module {
 }
 
 val viewModelsModule = module {
+    viewModel { MainViewModel() }
     viewModel { SearchViewModel(get()) }
 }
 

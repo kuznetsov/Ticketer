@@ -1,4 +1,4 @@
-package com.elliotgrin.ticketer.util
+package com.elliotgrin.ticketer.util.ext
 
 import android.view.LayoutInflater
 import android.view.View
