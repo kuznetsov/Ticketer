@@ -1,7 +1,7 @@
 package com.elliotgrin.ticketer
 
 import android.app.Application
-import com.elliotgrin.ticketer.koin.appModules
+import com.elliotgrin.ticketer.koin.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.fragment.koin.fragmentFactory
 import org.koin.core.context.startKoin
@@ -23,7 +23,7 @@ class Ticketer : Application() {
         startKoin {
             androidContext(this@Ticketer)
             fragmentFactory()
-            modules(appModules)
+            modules(fragmentsModule + viewModelsModule + repositoriesModule + apiModule)
         }
     }
 

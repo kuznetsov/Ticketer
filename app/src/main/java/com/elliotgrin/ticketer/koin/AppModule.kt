@@ -1,5 +1,6 @@
 package com.elliotgrin.ticketer.koin
 
+import com.elliotgrin.ticketer.search.AutocompleteRepository
 import com.elliotgrin.ticketer.search.SearchFragment
 import com.elliotgrin.ticketer.search.SearchViewModel
 import org.koin.androidx.fragment.dsl.fragment
@@ -11,7 +12,9 @@ val fragmentsModule = module {
 }
 
 val viewModelsModule = module {
-    viewModel { SearchViewModel() }
+    viewModel { SearchViewModel(get()) }
 }
 
-val appModules = listOf(fragmentsModule, viewModelsModule)
+val repositoriesModule = module {
+    factory { AutocompleteRepository(get()) }
+}

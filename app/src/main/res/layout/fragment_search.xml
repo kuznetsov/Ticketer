@@ -4,62 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_800"
+    android:background="@color/white"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingBottom="20dp"
     tools:context=".search.SearchFragment">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputLayoutFrom"
+        android:id="@+id/inputLayoutDeparture"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:hint="@string/text_input_from_hint"
-        app:boxBackgroundColor="@color/purple_700"
+        android:hint="@string/text_input_departure_hint"
         app:boxCornerRadiusBottomEnd="4dp"
         app:boxCornerRadiusBottomStart="4dp"
         app:boxCornerRadiusTopEnd="4dp"
         app:boxCornerRadiusTopStart="4dp"
-        app:boxStrokeWidth="0dp"
-        app:hintTextColor="@color/purple_900"
-        app:layout_constraintBottom_toTopOf="@id/inputLayoutTo"
+        app:boxStrokeColor="@color/gray_400"
+        app:layout_constraintBottom_toTopOf="@id/inputLayoutArrival"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextFrom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white" />
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/editTextDeparture"
+            style="@style/AutocompleteTextViewMaterialStyle"
+            android:imeOptions="actionNext" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputLayoutTo"
+        android:id="@+id/inputLayoutArrival"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:hint="@string/text_input_to_hint"
-        app:boxBackgroundColor="@color/purple_700"
+        android:hint="@string/text_input_arrival_hint"
         app:boxCornerRadiusBottomEnd="4dp"
         app:boxCornerRadiusBottomStart="4dp"
         app:boxCornerRadiusTopEnd="4dp"
         app:boxCornerRadiusTopStart="4dp"
-        app:boxStrokeWidth="0dp"
-        app:hintTextColor="@color/purple_900"
+        app:boxStrokeColor="@color/gray_400"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inputLayoutFrom">
+        app:layout_constraintTop_toBottomOf="@id/inputLayoutDeparture">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextTo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white" />
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/editTextArrival"
+            style="@style/AutocompleteTextViewMaterialStyle"
+            android:imeOptions="actionDone" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,12 +64,12 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:text="@string/button_search_title"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="14sp"
-        app:backgroundTint="@color/purple_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:shapeAppearanceOverlay="@style/PillShapeAppearance" />
+        app:shapeAppearanceOverlay="@style/PillShapeAppearance"
+        app:strokeColor="@color/gray_400" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

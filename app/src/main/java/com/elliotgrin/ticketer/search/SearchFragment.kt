@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.elliotgrin.ticketer.R
+import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout.fragment_search) {
 
@@ -13,7 +14,9 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
     }
 
     private fun initViews() {
-
+        val departureSuggestionsAdapter = SuggestionsAdapter(viewModel) { }
+        editTextDeparture.threshold = 2
+        editTextDeparture.setAdapter(departureSuggestionsAdapter)
     }
 
 }

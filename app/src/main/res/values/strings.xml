@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name">Ticketer</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Search -->
-    <string name="text_input_from_hint">From</string>
-    <string name="text_input_to_hint">To</string>
+    <string name="text_input_departure_hint">Departure</string>
+    <string name="text_input_arrival_hint">Arrival</string>
     <string name="button_search_title">Search</string>
 
 </resources>
