@@ -3,6 +3,8 @@ package com.elliotgrin.ticketer.search
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import com.elliotgrin.ticketer.R
 import com.elliotgrin.ticketer.main.MainViewModel
 import com.elliotgrin.ticketer.map.MapFragment
@@ -48,11 +50,9 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
         sharedViewModel.arrivalCity = arrival
     }
 
-    private fun openMapFragment() {
-        activity ?: return
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.mainContainer, MapFragment::class.java, null)
-            .commit()
+    private fun openMapFragment() = parentFragmentManager.commit {
+        add<MapFragment>(R.id.mainContainer)
+        addToBackStack(null)
     }
 
 }

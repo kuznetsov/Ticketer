@@ -2,6 +2,8 @@ package com.elliotgrin.ticketer.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.add
+import androidx.fragment.app.commit
 import com.elliotgrin.ticketer.R
 import com.elliotgrin.ticketer.search.SearchFragment
 import org.koin.androidx.fragment.android.setupKoinFragmentFactory
@@ -18,10 +20,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         openSearchFragment()
     }
 
-    private fun openSearchFragment() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.mainContainer, SearchFragment::class.java, null)
-            .commit()
+    private fun openSearchFragment() = supportFragmentManager.commit {
+        add<SearchFragment>(R.id.mainContainer)
+        addToBackStack(null)
     }
 
 }
