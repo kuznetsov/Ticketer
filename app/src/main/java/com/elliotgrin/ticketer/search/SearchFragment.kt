@@ -2,10 +2,10 @@ package com.elliotgrin.ticketer.search
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.elliotgrin.ticketer.R
 import com.elliotgrin.ticketer.main.MainViewModel
+import com.elliotgrin.ticketer.map.MapFragment
 import com.elliotgrin.ticketer.model.CityUiModel
 import com.elliotgrin.ticketer.util.ext.hideKeyboard
 import com.elliotgrin.ticketer.util.ext.setTextAndDismissDropDown
@@ -32,13 +32,7 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
         editTextDeparture.setAdapter(departureSuggestionsAdapter)
         editTextArrival.setAdapter(arrivalSuggestionsAdapter)
 
-        buttonSearch.setOnClickListener {
-            Toast.makeText(
-                requireContext(),
-                "${sharedViewModel.departureCity?.fullName} -> ${sharedViewModel.arrivalCity?.fullName}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        buttonSearch.setOnClickListener { openMapFragment() }
     }
 
     private fun setDeparture(departure: CityUiModel) {
@@ -52,6 +46,13 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
         editTextArrival.setTextAndDismissDropDown(arrival.shortName.toString())
         editTextArrival.hideKeyboard()
         sharedViewModel.arrivalCity = arrival
+    }
+
+    private fun openMapFragment() {
+        activity ?: return
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.mainContainer, MapFragment::class.java, null)
+            .commit()
     }
 
 }
