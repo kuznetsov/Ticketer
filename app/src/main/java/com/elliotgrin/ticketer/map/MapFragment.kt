@@ -5,20 +5,31 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.elliotgrin.ticketer.R
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-
+import kotlinx.android.synthetic.main.map_fragment.*
 
 class MapFragment(private val viewModel: MapViewModel) : Fragment(R.layout.map_fragment),
-    OnMapReadyCallback {
+    OnMapReadyCallback, MapViewProvider {
+
+    override fun getMapView(): MapView? = mapView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        parentFragmentManager.registerFragmentLifecycleCallbacks(
+            MapViewFragmentLifecycleCallback,
+            false
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        parentFragmentManager.unregisterFragmentLifecycleCallbacks(MapViewFragmentLifecycleCallback)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        mapView.getMapAsync(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
