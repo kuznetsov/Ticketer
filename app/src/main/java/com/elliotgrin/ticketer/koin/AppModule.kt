@@ -6,13 +6,14 @@ import com.elliotgrin.ticketer.map.MapViewModel
 import com.elliotgrin.ticketer.search.AutocompleteRepository
 import com.elliotgrin.ticketer.search.SearchFragment
 import com.elliotgrin.ticketer.search.SearchViewModel
+import com.elliotgrin.ticketer.util.MapMarkerUtil
 import org.koin.androidx.fragment.dsl.fragment
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val fragmentsModule = module {
     fragment { SearchFragment(get()) }
-    fragment { MapFragment(get()) }
+    fragment { MapFragment(get(), get()) }
 }
 
 val viewModelsModule = module {
@@ -23,4 +24,8 @@ val viewModelsModule = module {
 
 val repositoriesModule = module {
     factory { AutocompleteRepository(get()) }
+}
+
+val utilsModule = module {
+    factory { MapMarkerUtil(get()) }
 }

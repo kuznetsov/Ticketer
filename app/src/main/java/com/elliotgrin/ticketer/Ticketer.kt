@@ -23,7 +23,7 @@ class Ticketer : Application() {
         startKoin {
             androidContext(this@Ticketer)
             fragmentFactory()
-            modules(fragmentsModule + viewModelsModule + repositoriesModule + apiModule)
+            modules(appModules)
         }
     }
 

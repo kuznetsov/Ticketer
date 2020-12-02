@@ -6,15 +6,19 @@ import androidx.fragment.app.Fragment
 import com.elliotgrin.ticketer.R
 import com.elliotgrin.ticketer.main.MainViewModel
 import com.elliotgrin.ticketer.model.Marker
+import com.elliotgrin.ticketer.util.MapMarkerUtil
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.android.synthetic.main.map_fragment.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class MapFragment(private val viewModel: MapViewModel) : Fragment(R.layout.map_fragment),
-    OnMapReadyCallback, MapViewProvider {
+class MapFragment(
+    private val viewModel: MapViewModel,
+    private val mapMarkerUtil: MapMarkerUtil
+) : Fragment(R.layout.map_fragment), OnMapReadyCallback, MapViewProvider {
 
     private val sharedViewModel: MainViewModel by sharedViewModel()
 
@@ -45,9 +49,18 @@ class MapFragment(private val viewModel: MapViewModel) : Fragment(R.layout.map_f
     }
 
     private fun setMarkers(googleMap: GoogleMap?, departure: Marker, arrival: Marker) {
+        val bitmap1 = mapMarkerUtil.createBitmapFromMarker(departure)
+        val bitmap2 = mapMarkerUtil.createBitmapFromMarker(arrival)
+
+        val bm1 = BitmapDescriptorFactory.fromBitmap(bitmap1)
+        val bm2 = BitmapDescriptorFactory.fromBitmap(bitmap2)
+
+        val departureMarker = MarkerOptions().position(departure.location).icon(bm1)
+        val arrivalMarker = MarkerOptions().position(arrival.location).icon(bm2)
+
         googleMap?.apply {
-            addMarker(MarkerOptions().position(departure.location).title(departure.title))
-            addMarker(MarkerOptions().position(arrival.location).title(arrival.title))
+            addMarker(departureMarker)
+            addMarker(arrivalMarker)
         }
     }
 
