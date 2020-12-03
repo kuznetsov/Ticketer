@@ -65,8 +65,16 @@ class MapFragment(
         val bm1 = BitmapDescriptorFactory.fromBitmap(bitmap1)
         val bm2 = BitmapDescriptorFactory.fromBitmap(bitmap2)
 
-        val departureMarker = MarkerOptions().position(departure.location).icon(bm1)
-        val arrivalMarker = MarkerOptions().position(arrival.location).icon(bm2)
+        val departureMarker =
+            MarkerOptions()
+                .position(departure.location)
+                .icon(bm1)
+                .anchor(0.5f, 0.5f)
+
+        val arrivalMarker = MarkerOptions()
+            .position(arrival.location)
+            .icon(bm2)
+            .anchor(0.5f, 0.5f)
 
         googleMap?.apply {
             addMarker(departureMarker)
