@@ -5,9 +5,12 @@ import android.graphics.*
 import android.text.TextPaint
 import androidx.core.content.ContextCompat
 import com.elliotgrin.ticketer.R
-import com.elliotgrin.ticketer.model.Marker
+import com.elliotgrin.ticketer.model.CityMarker
 import com.elliotgrin.ticketer.util.ext.dpToPx
 import com.elliotgrin.ticketer.util.ext.spToPx
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
 private const val BITMAP_WIDTH_DP = 55f
 private const val BITMAP_HEIGHT_DP = 30f
@@ -21,7 +24,28 @@ class MapMarkerUtil(private val context: Context) {
     private val height = BITMAP_HEIGHT_DP.dpToPx()
     private val textSizePx = TEXT_SIZE_SP.spToPx()
 
-    fun createBitmapFromMarker(marker: Marker): Bitmap {
+    fun createCityMarker(marker: CityMarker): MarkerOptions {
+        val bitmap = createBitmapFromMarker(marker)
+        val bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap)
+        return MarkerOptions()
+            .position(marker.location)
+            .icon(bitmapDescriptor)
+            .anchor(0.5f, 0.5f)
+            .alpha(0.8f)
+    }
+
+    fun createPlaneMarker(position: LatLng): MarkerOptions {
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ic_plane)
+        val scaleBitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, false)
+        val bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(scaleBitmap)
+        return MarkerOptions()
+            .position(position)
+            .flat(true)
+            .anchor(0.5f, 0.5f)
+            .icon(bitmapDescriptor)
+    }
+
+    private fun createBitmapFromMarker(marker: CityMarker): Bitmap {
         val bitmap = Bitmap.createBitmap(width.toInt(), height.toInt(), Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
