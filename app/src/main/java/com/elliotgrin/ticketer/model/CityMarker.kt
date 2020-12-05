@@ -2,7 +2,7 @@ package com.elliotgrin.ticketer.model
 
 import com.google.android.gms.maps.model.LatLng
 
-data class Marker(
+data class CityMarker(
     val location: LatLng,
     val title: String
 ) {
