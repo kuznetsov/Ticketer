@@ -25,7 +25,7 @@ object MapUtils {
         val p4 = CartesianCoordinates(to)
 
         var t = 0.0
-        val delta = 0.1
+        val delta = 0.05
 
         while (t < 1.0) {
             val x = bezierStep(p1.x, p2.x, p3.x, p4.x, t)

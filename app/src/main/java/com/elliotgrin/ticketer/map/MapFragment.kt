@@ -1,10 +1,12 @@
 package com.elliotgrin.ticketer.map
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.elliotgrin.ticketer.R
+import com.elliotgrin.ticketer.common.PLANE_ANIMATION_STEP_DURATION_MS
 import com.elliotgrin.ticketer.main.MainViewModel
 import com.elliotgrin.ticketer.model.CityMarker
 import com.elliotgrin.ticketer.util.AnimationUtils
@@ -56,8 +58,9 @@ class MapFragment(
         val points = MapUtils.getBezierCurvePoints(departure.location, arrival.location)
 
         setupMap(googleMap)
-        setMarkers(googleMap, departure, arrival)
-        drawPathCurve(googleMap, points)
+        moveMap(googleMap, departure, arrival)
+        addCityMarkers(googleMap, departure, arrival)
+        drawCurvePolyline(googleMap, points)
         animatePlaneMarker(googleMap, points)
     }
 
@@ -65,7 +68,7 @@ class MapFragment(
         googleMap?.uiSettings?.isRotateGesturesEnabled = false
     }
 
-    private fun setMarkers(googleMap: GoogleMap?, departure: CityMarker, arrival: CityMarker) {
+    private fun addCityMarkers(googleMap: GoogleMap?, departure: CityMarker, arrival: CityMarker) {
         val departureMarker = mapMarkerUtil.createCityMarker(departure)
         val arrivalMarker = mapMarkerUtil.createCityMarker(arrival)
 
@@ -75,11 +78,11 @@ class MapFragment(
         }
     }
 
-    private fun moveMap(googleMap: GoogleMap, departure: CityMarker, arrival: CityMarker) {
+    private fun moveMap(googleMap: GoogleMap?, departure: CityMarker, arrival: CityMarker) {
         // TODO: 02.12.2020 move map in center between two markers
     }
 
-    private fun drawPathCurve(googleMap: GoogleMap?, points: List<LatLng>) {
+    private fun drawCurvePolyline(googleMap: GoogleMap?, points: List<LatLng>) {
         val polylineOptions = PolylineOptions().apply {
             addAll(points)
             width(POLYLINE_WIDTH_PX)
@@ -95,7 +98,19 @@ class MapFragment(
         val planeMarker = googleMap?.addMarker(markerOptions)
         currentLatLng = points.first()
 
-        for (i in 1 until points.size) updatePlaneLocation(planeMarker, points[i])
+        var i = 1
+        val handler = Handler()
+        var runnable = Runnable {  }
+        runnable = Runnable {
+            if (i < points.size) {
+                updatePlaneLocation(planeMarker, points[i])
+                handler.postDelayed(runnable, PLANE_ANIMATION_STEP_DURATION_MS)
+                i++
+            } else {
+                handler.removeCallbacks(runnable)
+            }
+        }
+        handler.postDelayed(runnable, 2000)
     }
 
     private fun updatePlaneLocation(planeMarker: Marker?, latLng: LatLng) {
