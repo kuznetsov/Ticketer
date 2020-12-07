@@ -53,7 +53,7 @@ class MapFragment(
     override fun onMapReady(googleMap: GoogleMap?) {
         val departure = CityMarker(sharedViewModel.departureCity ?: return)
         val arrival = CityMarker(sharedViewModel.arrivalCity ?: return)
-        val points = listOf(departure.location, arrival.location)
+        val points = MapUtils.getBezierCurvePoints(departure.location, arrival.location)
 
         setupMap(googleMap)
         setMarkers(googleMap, departure, arrival)
@@ -82,7 +82,6 @@ class MapFragment(
     private fun drawPathCurve(googleMap: GoogleMap?, points: List<LatLng>) {
         val polylineOptions = PolylineOptions().apply {
             addAll(points)
-            geodesic(true)
             width(POLYLINE_WIDTH_PX)
             color(ContextCompat.getColor(requireContext(), R.color.gray_900_50))
             pattern(listOf(Dot(), Gap(PATTERN_GAP_LENGTH_PX)))
