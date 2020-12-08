@@ -1,6 +1,7 @@
 package com.elliotgrin.ticketer.util
 
 import com.elliotgrin.ticketer.model.CartesianCoordinates
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import kotlin.math.*
 
@@ -9,9 +10,11 @@ private const val SHIFT = 8
 // TODO: 08.12.2020 get rid of comments
 object MapUtils {
 
-    fun getBezierCurvePoints(from: LatLng, to: LatLng): List<LatLng> {
-//        val p1 = if (from.longitude < to.longitude) from else to
-//        val p2 = if (from.longitude > to.longitude) from else to
+    fun getBezierCurvePoints(
+        from: LatLng,
+        to: LatLng,
+        googleMap: GoogleMap?
+    ): List<LatLng> {
 
         val result = mutableListOf<LatLng>()
 
@@ -25,13 +28,6 @@ object MapUtils {
         val p3 = CartesianCoordinates(control2)
         val p4 = CartesianCoordinates(to)
 
-        var t = 0.0
-        val delta = 0.05
-
-        while (t < 1.0) {
-            val x = bezierStep(p1.x, p2.x, p3.x, p4.x, t)
-            val y = bezierStep(p1.y, p2.y, p3.y, p4.y, t)
-            val z = bezierStep(p1.z, p2.z, p3.z, p4.z, t)
         val delta = 0.05.toBigDecimal()
         var t = 0.toBigDecimal()
 
@@ -93,10 +89,6 @@ object MapUtils {
         val lon = atan2(y, x)
         val hyp = sqrt(x * x + y * y)
         val lat = atan2(z, hyp)
-//
-//        // HACK: 0.9 and 1.1 was found by trial and error; this is probably *not* the right place to apply mid point shifting
-//        var lat = atan2(0.9 * z, hyp)
-//        if (lat > 0) lat = atan2(1.1 * z, hyp)
 
         return LatLng(Math.toDegrees(lat), Math.toDegrees(lon))
     }
