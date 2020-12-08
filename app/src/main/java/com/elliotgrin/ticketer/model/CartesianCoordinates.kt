@@ -12,6 +12,8 @@ data class CartesianCoordinates(
     val z: Double
 ) {
 
+    // TODO: 08.12.2020 fix secondary constructor
+
     constructor(p: CartesianCoordinates) : this(p.x, p.y, p.z)
 
     constructor(latLng: LatLng) : this(fromLatLng(latLng.latitude, latLng.longitude))

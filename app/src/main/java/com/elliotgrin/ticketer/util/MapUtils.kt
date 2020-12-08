@@ -6,6 +6,7 @@ import kotlin.math.*
 
 private const val SHIFT = 8
 
+// TODO: 08.12.2020 get rid of comments
 object MapUtils {
 
     fun getBezierCurvePoints(from: LatLng, to: LatLng): List<LatLng> {
