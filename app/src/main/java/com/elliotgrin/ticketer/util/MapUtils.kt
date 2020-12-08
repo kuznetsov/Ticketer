@@ -12,7 +12,7 @@ object MapUtils {
 //        val p1 = if (from.longitude < to.longitude) from else to
 //        val p2 = if (from.longitude > to.longitude) from else to
 
-        val result = mutableListOf(from)
+        val result = mutableListOf<LatLng>()
 
         val middle = midPoint(from, to)
 
@@ -34,7 +34,7 @@ object MapUtils {
 
             val control: LatLng = CartesianCoordinates.toLatLng(x, y, z)
 
-            result.add(control)
+            result += control
 
             t += delta
         }
