@@ -32,6 +32,16 @@ object MapUtils {
             val x = bezierStep(p1.x, p2.x, p3.x, p4.x, t)
             val y = bezierStep(p1.y, p2.y, p3.y, p4.y, t)
             val z = bezierStep(p1.z, p2.z, p3.z, p4.z, t)
+        val delta = 0.05.toBigDecimal()
+        var t = 0.toBigDecimal()
+
+        while (t <= 1.toBigDecimal()) {
+
+            val tDouble = t.toDouble()
+
+            val x = bezierStep(p1.x, p2.x, p3.x, p4.x, tDouble)
+            val y = bezierStep(p1.y, p2.y, p3.y, p4.y, tDouble)
+            val z = bezierStep(p1.z, p2.z, p3.z, p4.z, tDouble)
 
             val control: LatLng = CartesianCoordinates.toLatLng(x, y, z)
 
@@ -40,7 +50,7 @@ object MapUtils {
             t += delta
         }
 
-        return result + to
+        return result
     }
 
     fun getRotation(start: LatLng, end: LatLng): Float {
