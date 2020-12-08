@@ -12,6 +12,7 @@ import com.elliotgrin.ticketer.model.CityMarker
 import com.elliotgrin.ticketer.util.AnimationUtils
 import com.elliotgrin.ticketer.util.MapMarkerUtil
 import com.elliotgrin.ticketer.util.MapUtils
+import com.github.ajalt.timberkt.d
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -52,10 +53,14 @@ class MapFragment(
         mapView.getMapAsync(this)
     }
 
+    /**
+     * Here the whole work happens
+     */
     override fun onMapReady(googleMap: GoogleMap?) {
         val departure = CityMarker(sharedViewModel.departureCity ?: return)
         val arrival = CityMarker(sharedViewModel.arrivalCity ?: return)
         val points = MapUtils.getBezierCurvePoints(departure.location, arrival.location)
+        d { "Points: $points" }
 
         setupMap(googleMap)
         moveMap(googleMap, departure, arrival)
@@ -96,6 +101,7 @@ class MapFragment(
     private fun animatePlaneMarker(googleMap: GoogleMap?, points: List<LatLng>) {
         val markerOptions = mapMarkerUtil.createPlaneMarker(points.first())
         val planeMarker = googleMap?.addMarker(markerOptions)
+        planeMarker?.rotation = MapUtils.getRotation(points[0], points[1])
         currentLatLng = points.first()
 
         var i = 1
@@ -127,8 +133,8 @@ class MapFragment(
             val rotation = MapUtils.getRotation(previousLatLng!!, nextLocation)
 
             planeMarker?.apply {
-                position = nextLocation
                 if (!rotation.isNaN()) this.rotation = rotation
+                position = nextLocation
             }
         }
 
