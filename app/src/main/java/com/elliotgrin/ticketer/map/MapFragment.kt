@@ -12,7 +12,9 @@ import com.elliotgrin.ticketer.model.CityMarker
 import com.elliotgrin.ticketer.util.AnimationUtils
 import com.elliotgrin.ticketer.util.MapMarkerUtil
 import com.elliotgrin.ticketer.util.MapUtils
+import com.elliotgrin.ticketer.util.ext.dpToPx
 import com.github.ajalt.timberkt.d
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -84,7 +86,14 @@ class MapFragment(
     }
 
     private fun moveMap(googleMap: GoogleMap?, departure: CityMarker, arrival: CityMarker) {
-        // TODO: 02.12.2020 move map in center between two markers
+        val bounds = LatLngBounds.Builder().run {
+            include(departure.location)
+            include(arrival.location)
+            build()
+        }
+
+        val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50.dpToPx())
+        googleMap?.moveCamera(cameraUpdate)
     }
 
     private fun drawCurvePolyline(googleMap: GoogleMap?, points: List<LatLng>) {
