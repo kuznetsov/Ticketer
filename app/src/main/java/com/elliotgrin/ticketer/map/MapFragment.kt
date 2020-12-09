@@ -61,7 +61,7 @@ class MapFragment(
     override fun onMapReady(googleMap: GoogleMap?) {
         val departure = CityMarker(sharedViewModel.departureCity ?: return)
         val arrival = CityMarker(sharedViewModel.arrivalCity ?: return)
-        val points = MapUtils.getBezierCurvePoints(departure.location, arrival.location)
+        val points = MapUtils.getBezierCurvePoints(googleMap, departure.location, arrival.location)
         d { "Points: $points" }
 
         setupMap(googleMap)

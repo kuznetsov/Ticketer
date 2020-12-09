@@ -1,45 +1,63 @@
 package com.elliotgrin.ticketer.util
 
-import com.elliotgrin.ticketer.model.CartesianCoordinates
+import android.graphics.Point
+import android.graphics.PointF
+import androidx.core.graphics.toPoint
+import androidx.core.graphics.toPointF
+import com.github.ajalt.timberkt.d
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import kotlin.math.*
 
-private const val SHIFT = 8
+private const val SHIFT_PX = 75
 
 // TODO: 08.12.2020 get rid of comments
 object MapUtils {
 
     fun getBezierCurvePoints(
+        googleMap: GoogleMap?,
         from: LatLng,
-        to: LatLng,
-        googleMap: GoogleMap?
+        to: LatLng
     ): List<LatLng> {
+        val projection = googleMap?.projection ?: return listOf()
+        val p1 = projection.toScreenLocation(from)
+        val p4 = projection.toScreenLocation(to)
+        val middle = midPoint(p1, p4)
+        val p2 = getControlPoint1(midPoint(p1, middle))
+        val p3 = getControlPoint2(midPoint(middle, p4))
+        val midLatLng = projection.fromScreenLocation(middle)
+
+        val c1LatLng = projection.fromScreenLocation(p2)
+        val c2LatLng = projection.fromScreenLocation(p3)
+        googleMap.addMarker(MarkerOptions().position(midLatLng).title("Middle"))
+        googleMap.addMarker(MarkerOptions().position(c1LatLng).title("Control 1"))
+        googleMap.addMarker(MarkerOptions().position(c2LatLng).title("Control 2"))
+        d { "mid - $p2, shifted - ${getControlPoint1(p2)}" }
+        d { "mid - $p3, shifted - ${getControlPoint1(p3)}" }
 
         val result = mutableListOf<LatLng>()
-
-        val middle = midPoint(from, to)
-
-        val control1 = getControlPoint1(midPoint(from, middle))
-        val control2 = getControlPoint2(midPoint(middle, to))
-
-        val p1 = CartesianCoordinates(from)
-        val p2 = CartesianCoordinates(control1)
-        val p3 = CartesianCoordinates(control2)
-        val p4 = CartesianCoordinates(to)
 
         val delta = 0.05.toBigDecimal()
         var t = 0.toBigDecimal()
 
         while (t <= 1.toBigDecimal()) {
 
-            val tDouble = t.toDouble()
+            d { "t: $t" }
 
-            val x = bezierStep(p1.x, p2.x, p3.x, p4.x, tDouble)
-            val y = bezierStep(p1.y, p2.y, p3.y, p4.y, tDouble)
-            val z = bezierStep(p1.z, p2.z, p3.z, p4.z, tDouble)
+            val tFloat = t.toFloat()
 
-            val control: LatLng = CartesianCoordinates.toLatLng(x, y, z)
+            val pf1 = p1.toPointF()
+            val pf2 = p2.toPointF()
+            val pf3 = p3.toPointF()
+            val pf4 = p4.toPointF()
+
+            val x = bezierStep(pf1.x, pf2.x, pf3.x, pf4.x, tFloat)
+            val y = bezierStep(pf1.y, pf2.y, pf3.y, pf4.y, tFloat)
+            val point = PointF(x, y).toPoint()
+
+            val control: LatLng = projection.fromScreenLocation(point)
+            d { "PointF: ${PointF(x, y)}, Point: $point" }
 
             result += control
 
@@ -69,45 +87,27 @@ object MapUtils {
         }
     }
 
-    private fun midPoint(p1: LatLng, p2: LatLng): LatLng {
-        val lat1 = Math.toRadians(p1.latitude)
-        val lon1 = Math.toRadians(p1.longitude)
-        val lat2 = Math.toRadians(p2.latitude)
-        val lon2 = Math.toRadians(p2.longitude)
+    private fun midPoint(p1: Point, p2: Point): Point {
+        val x = (p1.x + p2.x) / 2
+        val y = (p1.y + p2.y) / 2
 
-        val x1 = cos(lat1) * cos(lon1)
-        val y1 = cos(lat1) * sin(lon1)
-        val z1 = sin(lat1)
-        val x2 = cos(lat2) * cos(lon2)
-        val y2 = cos(lat2) * sin(lon2)
-        val z2 = sin(lat2)
-
-        val x = (x1 + x2) / 2
-        val y = (y1 + y2) / 2
-        val z = (z1 + z2) / 2
-
-        val lon = atan2(y, x)
-        val hyp = sqrt(x * x + y * y)
-        val lat = atan2(z, hyp)
-
-        return LatLng(Math.toDegrees(lat), Math.toDegrees(lon))
+        return Point(x, y)
     }
 
-    private fun getControlPoint1(controlPoint: LatLng) = LatLng(
-        controlPoint.latitude - SHIFT,
-        controlPoint.longitude + SHIFT
+    private fun getControlPoint1(controlPoint: Point) = Point(
+        controlPoint.x - SHIFT_PX,
+        controlPoint.y - SHIFT_PX
     )
 
-    private fun getControlPoint2(controlPoint: LatLng) = LatLng(
-        controlPoint.latitude + SHIFT,
-        controlPoint.longitude - SHIFT
+    private fun getControlPoint2(controlPoint: Point) = Point(
+        controlPoint.x + SHIFT_PX,
+        controlPoint.y + SHIFT_PX
     )
 
     // P = (1−t)^3P1 + 3(1−t)^2tP2 + 3(1−t)t^2P3 + t^3P4
-    private fun bezierStep(p1: Double, p2: Double, p3: Double, p4: Double, t: Double): Double {
+    private fun bezierStep(p1: Float, p2: Float, p3: Float, p4: Float, t: Float): Float {
         val oneMinusT = 1 - t
         return oneMinusT.pow(3) * p1 + 3 * oneMinusT.pow(2) * t * p2 + 3 * oneMinusT * t.pow(2) * p3 + t.pow(3) * p4
     }
-
 
 }
