@@ -3,6 +3,7 @@ package com.elliotgrin.ticketer.map
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.elliotgrin.ticketer.R
@@ -13,7 +14,6 @@ import com.elliotgrin.ticketer.util.AnimationUtils
 import com.elliotgrin.ticketer.util.MapMarkerUtil
 import com.elliotgrin.ticketer.util.MapUtils
 import com.elliotgrin.ticketer.util.ext.dpToPx
-import com.github.ajalt.timberkt.d
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -59,10 +59,14 @@ class MapFragment(
      * Here the whole work happens
      */
     override fun onMapReady(googleMap: GoogleMap?) {
+        googleMap ?: run {
+            Toast.makeText(requireContext(), "Error loading Google Map", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val departure = CityMarker(sharedViewModel.departureCity ?: return)
         val arrival = CityMarker(sharedViewModel.arrivalCity ?: return)
         val points = MapUtils.getBezierCurvePoints(googleMap, departure.location, arrival.location)
-        d { "Points: $points" }
 
         setupMap(googleMap)
         moveMap(googleMap, departure, arrival)
@@ -71,21 +75,21 @@ class MapFragment(
         animatePlaneMarker(googleMap, points)
     }
 
-    private fun setupMap(googleMap: GoogleMap?) {
-        googleMap?.uiSettings?.isRotateGesturesEnabled = false
+    private fun setupMap(googleMap: GoogleMap) {
+        googleMap.uiSettings.isRotateGesturesEnabled = false
     }
 
-    private fun addCityMarkers(googleMap: GoogleMap?, departure: CityMarker, arrival: CityMarker) {
+    private fun addCityMarkers(googleMap: GoogleMap, departure: CityMarker, arrival: CityMarker) {
         val departureMarker = mapMarkerUtil.createCityMarker(departure)
         val arrivalMarker = mapMarkerUtil.createCityMarker(arrival)
 
-        googleMap?.apply {
+        googleMap.apply {
             addMarker(departureMarker)
             addMarker(arrivalMarker)
         }
     }
 
-    private fun moveMap(googleMap: GoogleMap?, departure: CityMarker, arrival: CityMarker) {
+    private fun moveMap(googleMap: GoogleMap, departure: CityMarker, arrival: CityMarker) {
         val bounds = LatLngBounds.Builder().run {
             include(departure.location)
             include(arrival.location)
@@ -93,10 +97,10 @@ class MapFragment(
         }
 
         val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 50.dpToPx())
-        googleMap?.moveCamera(cameraUpdate)
+        googleMap.moveCamera(cameraUpdate)
     }
 
-    private fun drawCurvePolyline(googleMap: GoogleMap?, points: List<LatLng>) {
+    private fun drawCurvePolyline(googleMap: GoogleMap, points: List<LatLng>) {
         val polylineOptions = PolylineOptions().apply {
             addAll(points)
             width(POLYLINE_WIDTH_PX)
@@ -104,18 +108,18 @@ class MapFragment(
             pattern(listOf(Dot(), Gap(PATTERN_GAP_LENGTH_PX)))
         }
 
-        googleMap?.addPolyline(polylineOptions)
+        googleMap.addPolyline(polylineOptions)
     }
 
-    private fun animatePlaneMarker(googleMap: GoogleMap?, points: List<LatLng>) {
+    private fun animatePlaneMarker(googleMap: GoogleMap, points: List<LatLng>) {
         val markerOptions = mapMarkerUtil.createPlaneMarker(points.first())
-        val planeMarker = googleMap?.addMarker(markerOptions)
+        val planeMarker = googleMap.addMarker(markerOptions)
         planeMarker?.rotation = MapUtils.getRotation(points[0], points[1])
         currentLatLng = points.first()
 
         var i = 1
         val handler = Handler()
-        var runnable = Runnable {  }
+        var runnable = Runnable { }
         runnable = Runnable {
             if (i < points.size) {
                 updatePlaneLocation(planeMarker, points[i])
@@ -128,7 +132,7 @@ class MapFragment(
         handler.postDelayed(runnable, 2000)
     }
 
-    private fun updatePlaneLocation(planeMarker: Marker?, latLng: LatLng) {
+    private fun updatePlaneLocation(planeMarker: Marker, latLng: LatLng) {
         previousLatLng = currentLatLng
         currentLatLng = latLng
 
@@ -141,7 +145,7 @@ class MapFragment(
             )
             val rotation = MapUtils.getRotation(previousLatLng!!, nextLocation)
 
-            planeMarker?.apply {
+            planeMarker.apply {
                 if (!rotation.isNaN()) this.rotation = rotation
                 position = nextLocation
             }

@@ -8,33 +8,27 @@ import com.github.ajalt.timberkt.d
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.atan
+import kotlin.math.pow
 
-private const val SHIFT_PX = 75
-
-// TODO: 08.12.2020 get rid of comments
 object MapUtils {
 
     fun getBezierCurvePoints(
-        googleMap: GoogleMap?,
+        googleMap: GoogleMap,
         from: LatLng,
         to: LatLng
     ): List<LatLng> {
-        val projection = googleMap?.projection ?: return listOf()
+        val projection = googleMap.projection
         val p1 = projection.toScreenLocation(from)
         val p4 = projection.toScreenLocation(to)
         val middle = midPoint(p1, p4)
-        val p2 = getControlPoint1(midPoint(p1, middle))
-        val p3 = getControlPoint2(midPoint(middle, p4))
-        val midLatLng = projection.fromScreenLocation(middle)
+        val mid1 = midPoint(p1, middle)
+        val mid2 = midPoint(middle, p4)
 
-        val c1LatLng = projection.fromScreenLocation(p2)
-        val c2LatLng = projection.fromScreenLocation(p3)
-        googleMap.addMarker(MarkerOptions().position(midLatLng).title("Middle"))
-        googleMap.addMarker(MarkerOptions().position(c1LatLng).title("Control 1"))
-        googleMap.addMarker(MarkerOptions().position(c2LatLng).title("Control 2"))
-        d { "mid - $p2, shifted - ${getControlPoint1(p2)}" }
-        d { "mid - $p3, shifted - ${getControlPoint1(p3)}" }
+        // Finding rotated vector
+        val p2 = getPerpendicularLengthenVector(Vector(mid1, p1)).p2
+        val p3 = getPerpendicularLengthenVector(Vector(mid2, p4)).p2
 
         val result = mutableListOf<LatLng>()
 
@@ -94,20 +88,45 @@ object MapUtils {
         return Point(x, y)
     }
 
-    private fun getControlPoint1(controlPoint: Point) = Point(
-        controlPoint.x - SHIFT_PX,
-        controlPoint.y - SHIFT_PX
-    )
+    private fun getPerpendicularLengthenVector(vector: Vector): Vector {
+        // Shift vector to starts from origin
+        val shift = vector.p1
+        val shifted = vector.shifted(shift)
 
-    private fun getControlPoint2(controlPoint: Point) = Point(
-        controlPoint.x + SHIFT_PX,
-        controlPoint.y + SHIFT_PX
-    )
+        // Rotate 90º
+        val perpendicular = shifted.perpendicular()
+
+        // Shift result vector end point to make it x2 longer
+        val endPoint = Point(perpendicular.p2.x * 2, perpendicular.p2.y * 2)
+        val lengthenVector = Vector(perpendicular.p1, endPoint)
+
+        // Shift back
+        val shiftBack = Point(-shift.x, -shift.y)
+        return lengthenVector.shifted(shiftBack)
+    }
 
     // P = (1−t)^3P1 + 3(1−t)^2tP2 + 3(1−t)t^2P3 + t^3P4
     private fun bezierStep(p1: Float, p2: Float, p3: Float, p4: Float, t: Float): Float {
         val oneMinusT = 1 - t
         return oneMinusT.pow(3) * p1 + 3 * oneMinusT.pow(2) * t * p2 + 3 * oneMinusT * t.pow(2) * p3 + t.pow(3) * p4
+    }
+
+    /**
+     * Simple class encapsulating vector manipulation
+     */
+    private data class Vector(
+        val p1: Point,
+        val p2: Point
+    ) {
+        fun shifted(shift: Point) = Vector(
+            Point(p1.x - shift.x, p1.y - shift.y),
+            Point(p2.x - shift.x, p2.y - shift.y)
+        )
+
+        fun perpendicular() = Vector(
+            p1,
+            Point(p2.y, -p2.x)
+        )
     }
 
 }
