@@ -2,6 +2,7 @@ package com.elliotgrin.ticketer.search
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
@@ -23,23 +24,41 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        observeSharedViewModel()
     }
 
     private fun initViews() {
         val departureSuggestionsAdapter = SuggestionsAdapter(viewModel, this::setDeparture)
         val arrivalSuggestionsAdapter = SuggestionsAdapter(viewModel, this::setArrival)
-        restoreEditTexts()
+
         editTextDeparture.threshold = AUTOCOMPLETE_THRESHOLD
         editTextArrival.threshold = AUTOCOMPLETE_THRESHOLD
         editTextDeparture.setAdapter(departureSuggestionsAdapter)
         editTextArrival.setAdapter(arrivalSuggestionsAdapter)
 
+        restoreEditTexts()
+        setTextChangeListeners()
+
         buttonSearch.setOnClickListener { openMapFragment() }
+    }
+
+    private fun observeSharedViewModel() = sharedViewModel.citiesLiveData.observe(viewLifecycleOwner) { areNotNull ->
+        buttonSearch.isEnabled = areNotNull
     }
 
     private fun restoreEditTexts() {
         sharedViewModel.departureCity?.let { editTextDeparture.setTextAndDismissDropDown(it.shortName.toString()) }
         sharedViewModel.arrivalCity?.let { editTextArrival.setTextAndDismissDropDown(it.shortName.toString()) }
+    }
+
+    private fun setTextChangeListeners() {
+        editTextDeparture.doAfterTextChanged { text ->
+            if (text.isNullOrBlank()) sharedViewModel.departureCity = null
+        }
+
+        editTextArrival.doAfterTextChanged { text ->
+            if (text.isNullOrBlank()) sharedViewModel.arrivalCity = null
+        }
     }
 
     private fun setDeparture(departure: CityUiModel) {
