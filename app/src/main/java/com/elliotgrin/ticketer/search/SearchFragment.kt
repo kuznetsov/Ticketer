@@ -28,13 +28,18 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
     private fun initViews() {
         val departureSuggestionsAdapter = SuggestionsAdapter(viewModel, this::setDeparture)
         val arrivalSuggestionsAdapter = SuggestionsAdapter(viewModel, this::setArrival)
-
+        restoreEditTexts()
         editTextDeparture.threshold = AUTOCOMPLETE_THRESHOLD
         editTextArrival.threshold = AUTOCOMPLETE_THRESHOLD
         editTextDeparture.setAdapter(departureSuggestionsAdapter)
         editTextArrival.setAdapter(arrivalSuggestionsAdapter)
 
         buttonSearch.setOnClickListener { openMapFragment() }
+    }
+
+    private fun restoreEditTexts() {
+        sharedViewModel.departureCity?.let { editTextDeparture.setTextAndDismissDropDown(it.shortName.toString()) }
+        sharedViewModel.arrivalCity?.let { editTextArrival.setTextAndDismissDropDown(it.shortName.toString()) }
     }
 
     private fun setDeparture(departure: CityUiModel) {
