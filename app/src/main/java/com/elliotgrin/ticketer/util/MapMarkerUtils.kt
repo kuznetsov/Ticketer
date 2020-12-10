@@ -42,6 +42,7 @@ class MapMarkerUtil(private val context: Context) {
             .position(position)
             .flat(true)
             .anchor(0.5f, 0.5f)
+            .zIndex(1.0f)
             .icon(bitmapDescriptor)
     }
 
