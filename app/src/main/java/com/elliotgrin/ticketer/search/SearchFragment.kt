@@ -3,15 +3,19 @@ package com.elliotgrin.ticketer.search
 import android.os.Bundle
 import android.view.View
 import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.elliotgrin.ticketer.R
+import com.elliotgrin.ticketer.common.LANG_EN
+import com.elliotgrin.ticketer.common.LANG_RU
 import com.elliotgrin.ticketer.main.MainViewModel
 import com.elliotgrin.ticketer.map.MapFragment
 import com.elliotgrin.ticketer.model.CityUiModel
 import com.elliotgrin.ticketer.util.ext.hideKeyboard
 import com.elliotgrin.ticketer.util.ext.setTextAndDismissDropDown
+import com.github.ajalt.timberkt.d
 import kotlinx.android.synthetic.main.fragment_search.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -52,13 +56,17 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
     }
 
     private fun setTextChangeListeners() {
-        editTextDeparture.doAfterTextChanged { text ->
+
+        editTextDeparture.doOnTextChanged { text, _, _, _ ->
             if (text.isNullOrBlank()) sharedViewModel.departureCity = null
+            viewModel.setLanguage(text)
         }
 
-        editTextArrival.doAfterTextChanged { text ->
+        editTextArrival.doOnTextChanged { text, _, _, _ ->
             if (text.isNullOrBlank()) sharedViewModel.arrivalCity = null
+            viewModel.setLanguage(text)
         }
+
     }
 
     private fun setDeparture(departure: CityUiModel) {
