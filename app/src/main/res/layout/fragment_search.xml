@@ -5,16 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:paddingStart="20dp"
-    android:paddingEnd="20dp"
-    android:paddingBottom="20dp"
     tools:context=".search.SearchFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/searchToolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/app_name" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputLayoutDeparture"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/base_screen_margin"
+        android:layout_marginEnd="@dimen/base_screen_margin"
         android:layout_marginBottom="5dp"
         android:hint="@string/text_input_departure_hint"
         app:boxCornerRadiusBottomEnd="4dp"
@@ -25,7 +33,7 @@
         app:layout_constraintBottom_toTopOf="@id/inputLayoutArrival"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchToolbar"
         app:layout_constraintVertical_chainStyle="packed">
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
@@ -40,7 +48,9 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/base_screen_margin"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="@dimen/base_screen_margin"
         android:hint="@string/text_input_arrival_hint"
         app:boxCornerRadiusBottomEnd="4dp"
         app:boxCornerRadiusBottomStart="4dp"
@@ -64,6 +74,9 @@
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="60dp"
+        android:layout_marginStart="@dimen/base_screen_margin"
+        android:layout_marginEnd="@dimen/base_screen_margin"
+        android:layout_marginBottom="@dimen/base_screen_margin"
         android:text="@string/button_search_title"
         android:textColor="@color/black"
         android:textSize="14sp"
