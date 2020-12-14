@@ -13,7 +13,9 @@ import com.elliotgrin.ticketer.model.CityMarker
 import com.elliotgrin.ticketer.util.AnimationUtils
 import com.elliotgrin.ticketer.util.MapMarkerUtil
 import com.elliotgrin.ticketer.util.MapUtils
+import com.elliotgrin.ticketer.util.ext.disableFullscreen
 import com.elliotgrin.ticketer.util.ext.dpToPx
+import com.elliotgrin.ticketer.util.ext.enableFullscreen
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -45,14 +47,10 @@ class MapFragment(
         )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        parentFragmentManager.unregisterFragmentLifecycleCallbacks(MapViewFragmentLifecycleCallback)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.getMapAsync(this)
+        enableFullscreen()
     }
 
     /**
@@ -152,6 +150,16 @@ class MapFragment(
         }
 
         valueAnimator.start()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disableFullscreen()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        parentFragmentManager.unregisterFragmentLifecycleCallbacks(MapViewFragmentLifecycleCallback)
     }
 
 }
