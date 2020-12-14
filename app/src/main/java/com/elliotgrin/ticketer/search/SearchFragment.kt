@@ -2,20 +2,16 @@ package com.elliotgrin.ticketer.search
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.elliotgrin.ticketer.R
-import com.elliotgrin.ticketer.common.LANG_EN
-import com.elliotgrin.ticketer.common.LANG_RU
 import com.elliotgrin.ticketer.main.MainViewModel
 import com.elliotgrin.ticketer.map.MapFragment
 import com.elliotgrin.ticketer.model.CityUiModel
 import com.elliotgrin.ticketer.util.ext.hideKeyboard
 import com.elliotgrin.ticketer.util.ext.setTextAndDismissDropDown
-import com.github.ajalt.timberkt.d
 import kotlinx.android.synthetic.main.fragment_search.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -27,8 +23,12 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
         observeSharedViewModel()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initViews()
     }
 
     private fun initViews() {
@@ -40,7 +40,6 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
         editTextDeparture.setAdapter(departureSuggestionsAdapter)
         editTextArrival.setAdapter(arrivalSuggestionsAdapter)
 
-        restoreEditTexts()
         setTextChangeListeners()
 
         buttonSearch.setOnClickListener { openMapFragment() }
@@ -50,20 +49,15 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
         buttonSearch.isEnabled = areNotNull
     }
 
-    private fun restoreEditTexts() {
-        sharedViewModel.departureCity?.let { editTextDeparture.setTextAndDismissDropDown(it.shortName.toString()) }
-        sharedViewModel.arrivalCity?.let { editTextArrival.setTextAndDismissDropDown(it.shortName.toString()) }
-    }
-
     private fun setTextChangeListeners() {
 
         editTextDeparture.doOnTextChanged { text, _, _, _ ->
-            if (text.isNullOrBlank()) sharedViewModel.departureCity = null
+            if (text.isNullOrEmpty()) sharedViewModel.departureCity = null
             viewModel.setLanguage(text)
         }
 
         editTextArrival.doOnTextChanged { text, _, _, _ ->
-            if (text.isNullOrBlank()) sharedViewModel.arrivalCity = null
+            if (text.isNullOrEmpty()) sharedViewModel.arrivalCity = null
             viewModel.setLanguage(text)
         }
 
@@ -84,7 +78,7 @@ class SearchFragment(private val viewModel: SearchViewModel) : Fragment(R.layout
 
     private fun openMapFragment() = parentFragmentManager.commit {
         add<MapFragment>(R.id.mainContainer)
-        addToBackStack(null)
+        addToBackStack(MapFragment::class.java.simpleName)
     }
 
 }
