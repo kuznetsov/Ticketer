@@ -17,12 +17,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         setupKoinFragmentFactory()
         super.onCreate(savedInstanceState)
-        openSearchFragment()
+        if (savedInstanceState == null) openSearchFragment()
     }
 
     private fun openSearchFragment() = supportFragmentManager.commit {
         add<SearchFragment>(R.id.mainContainer)
-        addToBackStack(null)
     }
 
 }
