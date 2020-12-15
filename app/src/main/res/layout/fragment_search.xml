@@ -7,14 +7,24 @@
     android:background="@color/white"
     tools:context=".search.SearchFragment">
 
-    <androidx.appcompat.widget.Toolbar
+    <FrameLayout
         android:id="@+id/searchToolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/app_name" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/rubik_medium"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textSize="24sp" />
+
+    </FrameLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputLayoutDeparture"
