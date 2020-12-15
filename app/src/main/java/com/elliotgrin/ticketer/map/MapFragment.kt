@@ -26,9 +26,11 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 private const val PATTERN_GAP_LENGTH_PX = 15f
 private const val POLYLINE_WIDTH_PX = 15f
+private const val KEY_PREVIOUS_LAT_LNG = "key:previous_lat_lng"
+private const val KEY_CURRENT_LAT_LNG = "key:current_lat_lng"
+private const val KEY_I_STEP = "key:i_step"
 
 class MapFragment(
-    private val viewModel: MapViewModel,
     private val mapMarkerUtil: MapMarkerUtil
 ) : Fragment(R.layout.map_fragment), OnMapReadyCallback, MapViewProvider {
 
@@ -38,6 +40,7 @@ class MapFragment(
 
     private var currentLatLng: LatLng? = null
     private var previousLatLng: LatLng? = null
+    private var i: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +48,23 @@ class MapFragment(
             MapViewFragmentLifecycleCallback,
             false
         )
+
+        savedInstanceState?.let { restoreLatLng(it) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.getMapAsync(this)
         enableFullscreen()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.apply {
+            putParcelable(KEY_PREVIOUS_LAT_LNG, previousLatLng)
+            putParcelable(KEY_CURRENT_LAT_LNG, currentLatLng)
+            putInt(KEY_I_STEP, i)
+        }
     }
 
     /**
@@ -71,6 +85,12 @@ class MapFragment(
         addCityMarkers(googleMap, departure, arrival)
         drawCurvePolyline(googleMap, points)
         animatePlaneMarker(googleMap, points)
+    }
+
+    private fun restoreLatLng(savedInstanceState: Bundle) {
+        previousLatLng = savedInstanceState.getParcelable(KEY_PREVIOUS_LAT_LNG)
+        currentLatLng = savedInstanceState.getParcelable(KEY_CURRENT_LAT_LNG)
+        i = savedInstanceState.getInt(KEY_I_STEP)
     }
 
     private fun setupMap(googleMap: GoogleMap) {
@@ -110,12 +130,16 @@ class MapFragment(
     }
 
     private fun animatePlaneMarker(googleMap: GoogleMap, points: List<LatLng>) {
-        val markerOptions = mapMarkerUtil.createPlaneMarker(points.first())
+        if (currentLatLng == null) currentLatLng = points.first()
+        val markerOptions = mapMarkerUtil.createPlaneMarker(currentLatLng!!)
         val planeMarker = googleMap.addMarker(markerOptions)
-        planeMarker?.rotation = MapUtils.getRotation(points[0], points[1])
-        currentLatLng = points.first()
+        val rotation = if (currentLatLng != null && previousLatLng != null) {
+            MapUtils.getRotation(previousLatLng!!, currentLatLng!!)
+        } else {
+            MapUtils.getRotation(points[0], points[1])
+        }
+        planeMarker?.rotation = rotation
 
-        var i = 1
         val handler = Handler()
         var runnable = Runnable { }
         runnable = Runnable {
@@ -127,7 +151,9 @@ class MapFragment(
                 handler.removeCallbacks(runnable)
             }
         }
-        handler.postDelayed(runnable, 2000)
+
+        val delay = if (i == 1) 2000 else 0L
+        handler.postDelayed(runnable, delay)
     }
 
     private fun updatePlaneLocation(planeMarker: Marker, latLng: LatLng) {
